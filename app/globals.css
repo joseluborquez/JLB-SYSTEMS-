@@ -1,26 +1,182 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Los tokens de Tailwind apuntan a las variables --jlb-*, que se redefinen por
+   tema más abajo. Así `bg-bg` o `text-muted` cambian solos al alternar el tema,
+   sin variantes dark: repartidas por los componentes. */
+@theme {
+  --color-bg: var(--jlb-bg);
+  --color-surface: var(--jlb-surface);
+  --color-border: var(--jlb-border);
+  --color-border-hi: var(--jlb-border-hi);
+  --color-fg: var(--jlb-fg);
+  --color-muted: var(--jlb-muted);
+  --color-dim: var(--jlb-dim);
+  --color-focus: var(--jlb-focus);
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Acento invertido: el fondo del botón primario y su texto.
+     En oscuro es blanco sobre negro; en claro, negro sobre blanco. */
+  --color-accent: var(--jlb-accent);
+  --color-accent-fg: var(--jlb-accent-fg);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --radius-md: 6px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Tema oscuro: es el valor base, y también el fallback si el script de
+   layout.tsx no alcanza a correr. */
+:root {
+  color-scheme: dark;
+  --jlb-bg: #000000;
+  --jlb-surface: #0a0a0a;
+  --jlb-border: #1f1f1f;
+  --jlb-border-hi: #2e2e2e;
+  --jlb-fg: #ededed;
+  --jlb-muted: #a1a1a1;
+  --jlb-dim: #6e6e6e;
+  --jlb-focus: #0070f3;
+  --jlb-accent: #ffffff;
+  --jlb-accent-fg: #000000;
+}
+
+/* Fallback sin JavaScript: sigue la preferencia del sistema mientras el
+   usuario no haya forzado el tema oscuro. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --jlb-bg: #ffffff;
+    --jlb-surface: #fafafa;
+    --jlb-border: #eaeaea;
+    --jlb-border-hi: #d4d4d4;
+    --jlb-fg: #171717;
+    --jlb-muted: #666666;
+    --jlb-dim: #8f8f8f;
+    --jlb-focus: #0070f3;
+    --jlb-accent: #171717;
+    --jlb-accent-fg: #ffffff;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Elección explícita del usuario. Va después del @media para ganarle por
+   orden: ambos selectores tienen la misma especificidad. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --jlb-bg: #ffffff;
+  --jlb-surface: #fafafa;
+  --jlb-border: #eaeaea;
+  --jlb-border-hi: #d4d4d4;
+  --jlb-fg: #171717;
+  --jlb-muted: #666666;
+  --jlb-dim: #8f8f8f;
+  --jlb-focus: #0070f3;
+  --jlb-accent: #171717;
+  --jlb-accent-fg: #ffffff;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --jlb-bg: #000000;
+  --jlb-surface: #0a0a0a;
+  --jlb-border: #1f1f1f;
+  --jlb-border-hi: #2e2e2e;
+  --jlb-fg: #ededed;
+  --jlb-muted: #a1a1a1;
+  --jlb-dim: #6e6e6e;
+  --jlb-focus: #0070f3;
+  --jlb-accent: #ffffff;
+  --jlb-accent-fg: #000000;
+}
+
+/* Estas reglas van en @layer base a propósito: escritas fuera de una capa
+   ganarían sobre las utilidades de Tailwind, y `a { color: inherit }` dejaría
+   sin efecto el text-accent-fg de los botones que son <a>. */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Compensa la navbar fija cuando se salta a #planes */
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background: var(--color-fg);
+    color: var(--color-bg);
+  }
+}
+
+/* Íconos del selector de tema: se muestra el que corresponde vía CSS, así el
+   botón no parpadea ni desincroniza la hidratación. */
+.jlb-icono-claro,
+.jlb-icono-oscuro {
+  display: none;
+}
+
+[data-theme="light"] .jlb-icono-claro {
+  display: block;
+}
+
+[data-theme="dark"] .jlb-icono-oscuro {
+  display: block;
+}
+
+/* Sin data-theme (JS deshabilitado) mostramos el ícono según el sistema. */
+:root:not([data-theme]) .jlb-icono-oscuro {
+  display: block;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .jlb-icono-oscuro {
+    display: none;
+  }
+
+  :root:not([data-theme]) .jlb-icono-claro {
+    display: block;
+  }
+}
+
+/* Indicador de "escribiendo" del demo. */
+@keyframes jlb-pulse {
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
+.jlb-dot {
+  animation: jlb-pulse 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

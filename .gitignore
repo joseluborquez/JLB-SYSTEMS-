@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Documento interno: costos, márgenes y estrategia de precios.
+# Este repo es público. Si lo pasas a privado, puedes borrar esta línea.
+/docs/

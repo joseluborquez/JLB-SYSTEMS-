@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JLB Systems — landing
 
-## Getting Started
+Landing page de JLB Systems SpA. El demo no está embebido: la sección Demo
+invita a escribirle por WhatsApp al agente real de JLB Systems, que es el mismo
+producto que se vende.
 
-First, run the development server:
+Next.js (App Router) · TypeScript · Tailwind CSS v4. Sin dependencias fuera del
+framework.
+
+## Instalar y correr
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev    # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+No hay variables de entorno. Es un sitio estático: no hay rutas de API, ni base
+de datos, ni claves que rotar.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Todo lo editable: `lib/config.ts`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Nombres, links y contacto viven en un solo archivo. Ningún componente tiene
+datos escritos a mano.
 
-## Learn More
+| Campo | Valor actual | Dónde aparece |
+|---|---|---|
+| `numero` | `12082485778` | base de los dos links de WhatsApp |
+| `whatsapp` | prellena "Hola, vengo de la web" | hero, precios, cierre |
+| `whatsappDemo` | prellena "Hola, quiero probar el agente" | sección Demo |
+| `calendario` | link de Google Calendar | navbar, cierre |
+| `marca` | `JLB Systems` | logotipo de navbar y footer |
+| `empresa` | `JLB Systems SpA` | cabecera del chat del Demo |
+| `email` | `contacto@nocodejose.com` | footer |
 
-To learn more about Next.js, take a look at the following resources:
+**El número va sin `+`, espacios ni guiones.** `+1 208-248-5778` se escribe
+`12082485778`. Los dos links se arman solos a partir de él, con mensajes
+distintos para que puedas separar en tu bandeja quién viene a probar el agente
+de quién viene a comprar.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+El campo se llama `calendario` y no `googlecalendar` a propósito: cambiar de
+herramienta de agendamiento no debería obligar a tocar los componentes.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## La conversación de la sección Demo
 
-## Deploy on Vercel
+`components/Demo.tsx` arranca con un arreglo `conversacion` que se muestra como
+vista previa. **Reemplázalo por una transcripción real** de tu agente
+(anonimizada) y cambia la etiqueta del pie de "Conversación de ejemplo" a
+"Conversación real". Una conversación auténtica convence mucho más.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Dos cosas que deben mantenerse sincronizadas con la realidad, o el visitante lo
+nota en treinta segundos:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Los precios del ejemplo deben calzar** con lo que responde tu agente de
+  verdad y con la sección Precios. Hoy la conversación cita $250 de
+  implementación y $150 de mensualidad; si cambias uno, cambia el otro.
+- Las preguntas sugeridas deben ser preguntas que tu agente sepa responder.
+
+## Temas claro y oscuro
+
+Por defecto sigue la preferencia del sistema. El botón de la navbar alterna
+manualmente y guarda la elección en `localStorage` (`jlb-tema`), que desde ahí
+manda por sobre el sistema.
+
+Los colores no se repiten por tema en cada componente: los tokens de Tailwind
+(`--color-bg`, `--color-fg`, …) apuntan a variables `--jlb-*` que se redefinen
+en `app/globals.css` según `[data-theme]`. Para ajustar una paleta, editas un
+solo bloque.
+
+Dos detalles que conviene no romper al editar:
+
+- `app/layout.tsx` inyecta un script inline que fija `data-theme` **antes** del
+  primer paint. Sin él la página aparece con el tema equivocado y salta.
+- Las reglas base (`html`, `body`, `a`, `:focus-visible`) van dentro de
+  `@layer base`. Escritas fuera de una capa le ganarían a las utilidades de
+  Tailwind, y `a { color: inherit }` dejaría los botones primarios con el texto
+  invisible.
+
+El botón primario usa `bg-accent` / `text-accent-fg`, que se invierten con el
+tema: blanco sobre negro en oscuro, negro sobre blanco en claro.
+
+## Estructura
+
+```
+app/
+  layout.tsx     fuentes Geist + metadata + script de tema
+  page.tsx       importa las 7 secciones en orden
+  globals.css    tokens de color, paletas por tema y reglas base
+components/      un componente por sección, más Eyebrow, Reticula y ThemeToggle
+lib/
+  config.ts      links, marca y contacto (ver tabla más arriba)
+  ui.ts          clases compartidas (botones, contenedor, titular, tarjeta)
+docs/
+  estructura-de-costos.md   documento interno de costos y topes por cliente
+```
+
+`Reticula` es la decoración de fondo (líneas verticales + cruces) que usan el
+hero y el cierre. `Eyebrow` es la etiqueta pequeña sobre cada titular.
+
+## Build
+
+```bash
+npm run build
+```
