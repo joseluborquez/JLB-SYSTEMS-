@@ -9,6 +9,15 @@ import { btnPrimary, card, container, heading, section } from "@/lib/ui";
 // mensajes de plantilla de Meta. Escalonar por conversaciones sería cobrar por
 // lo más barato. Las conversaciones incluidas van como tope, no como driver.
 //
+// El precio de la conversación adicional es MÁS ALTO que el precio efectivo
+// por conversación del propio tramo, y eso es deliberado. Si fuera más barato,
+// a un cliente le convendría quedarse en el tramo chico y desbordar para
+// siempre: 800 conversaciones en el tramo 1 saldrían $300 contra los $390 del
+// tramo 2. Así, subir de tramo conviene justo cuando el cliente lo necesita.
+//
+// El extra BAJA al subir de tramo, premiando al que se compromete. La
+// competencia cobra $0,40 plano en todos sus planes.
+//
 // Los valores salen del modelo en COSTOS.md del repo del CRM. Si cambias uno
 // acá, cambia también el prompt del agente: cita los precios de memoria.
 const tramos = [
@@ -18,7 +27,7 @@ const tramos = [
     mensualidad: "$220",
     para: "Negocios que pierden clientes por no contestar a tiempo.",
     conversaciones: "400 conversaciones al mes",
-    extra: "$0,20 por conversación adicional",
+    extra: "$0,40 por conversación adicional",
     incluye: [
       "Responde dudas frecuentes con la información de tu negocio",
       "Entiende qué necesita cada persona y lo registra",
@@ -33,7 +42,7 @@ const tramos = [
     mensualidad: "$390",
     para: "Negocios con sistemas propios donde el agente tiene que operar.",
     conversaciones: "1.200 conversaciones al mes",
-    extra: "$0,15 por conversación adicional",
+    extra: "$0,30 por conversación adicional",
     incluye: [
       "Todo lo anterior",
       "Se conecta con hasta 3 de tus sistemas: CRM, ERP, agenda, pagos",
@@ -48,7 +57,7 @@ const tramos = [
     mensualidad: "$890",
     para: "Operaciones de alto volumen que además quieren recuperar ventas.",
     conversaciones: "3.000 conversaciones al mes",
-    extra: "$0,12 por conversación adicional",
+    extra: "$0,25 por conversación adicional",
     incluye: [
       "Todo lo anterior",
       "Integraciones a medida, sin límite de sistemas",
