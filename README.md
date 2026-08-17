@@ -51,8 +51,14 @@ Dos cosas que deben mantenerse sincronizadas con la realidad, o el visitante lo
 nota en treinta segundos:
 
 - **Los precios del ejemplo deben calzar** con lo que responde tu agente de
-  verdad y con la sección Precios. Hoy la conversación cita $250 de
-  implementación y $150 de mensualidad; si cambias uno, cambia el otro.
+  verdad y con la sección Precios. Viven en TRES lugares y hay que cambiarlos
+  juntos: `components/Planes.tsx`, la conversación de `components/Demo.tsx`, y
+  el prompt del agente en el repo del CRM (`kapso/agente-prompt.md`), que los
+  cita de memoria.
+
+  Hoy son tres tramos: **$450 + $220/mes**, **$590 + $390/mes** y
+  **$1.400 + $890/mes**. El modelo de costos que los justifica está en
+  `CRM-lead-to-customer/COSTOS.md`.
 - Las preguntas sugeridas deben ser preguntas que tu agente sepa responder.
 
 ## Temas claro y oscuro

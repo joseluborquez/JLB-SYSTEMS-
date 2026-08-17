@@ -1,40 +1,71 @@
 import Eyebrow, { IconoEtiqueta } from "@/components/Eyebrow";
 import { config } from "@/lib/config";
-import { card, container, heading, section } from "@/lib/ui";
+import { btnPrimary, card, container, heading, section } from "@/lib/ui";
 
-// Los tres momentos de pago. La implementación es un precio cerrado; la
-// mensualidad va con "desde" mientras se cotiza caso a caso.
-const comoSePaga = [
+// Tres tramos, definidos por LO QUE HACE el agente y no por volumen.
+//
+// La razón es de costos: una conversación cuesta centavos de IA, mientras que
+// las integraciones cuestan horas de desarrollo y los seguimientos cuestan
+// mensajes de plantilla de Meta. Escalonar por conversaciones sería cobrar por
+// lo más barato. Las conversaciones incluidas van como tope, no como driver.
+//
+// Los valores salen del modelo en COSTOS.md del repo del CRM. Si cambias uno
+// acá, cambia también el prompt del agente: cita los precios de memoria.
+const tramos = [
   {
-    monto: "$250 USD + IVA",
-    titulo: "Implementación",
-    detalle: "Pago único. Construyo el agente y lo dejo andando.",
+    nombre: "Responde y agenda",
+    implementacion: "$450",
+    mensualidad: "$220",
+    para: "Negocios que pierden clientes por no contestar a tiempo.",
+    conversaciones: "400 conversaciones al mes",
+    extra: "$0,20 por conversación adicional",
+    incluye: [
+      "Responde dudas frecuentes con la información de tu negocio",
+      "Entiende qué necesita cada persona y lo registra",
+      "Agenda en tu calendario y manda la invitación",
+      "Te avisa cuando alguien necesita hablar contigo",
+    ],
+    destacado: false,
   },
   {
-    monto: "Sin mensualidad",
-    titulo: "Primer mes de operación",
-    detalle: "Mi fee parte el segundo mes. Solo corre el consumo.",
+    nombre: "Integrado",
+    implementacion: "$590",
+    mensualidad: "$390",
+    para: "Negocios con sistemas propios donde el agente tiene que operar.",
+    conversaciones: "1.200 conversaciones al mes",
+    extra: "$0,15 por conversación adicional",
+    incluye: [
+      "Todo lo anterior",
+      "Se conecta con hasta 3 de tus sistemas: CRM, ERP, agenda, pagos",
+      "Consulta stock, precios o estado de pedidos en vivo",
+      "Recordatorios automáticos antes de cada cita",
+    ],
+    destacado: true,
   },
   {
-    monto: "Desde $150 USD + IVA",
-    titulo: "Desde el segundo mes",
-    detalle: "Según el volumen de tu negocio. Mes a mes, sin contrato.",
+    nombre: "Ciclo completo",
+    implementacion: "$1.400",
+    mensualidad: "$890",
+    para: "Operaciones de alto volumen que además quieren recuperar ventas.",
+    conversaciones: "3.000 conversaciones al mes",
+    extra: "$0,12 por conversación adicional",
+    incluye: [
+      "Todo lo anterior",
+      "Integraciones a medida, sin límite de sistemas",
+      "Seguimiento a quien no respondió y recuperación de ventas caídas",
+      "Prioridad de soporte y ajustes",
+    ],
+    destacado: false,
   },
 ];
 
 const incluyeSiempre = [
-  "Agente IA: responde dudas, entiende qué necesita y agenda",
-  "Integraciones: CRM, base de datos, pagos, flujos multi-paso",
-  "Panel de conversaciones + aviso cuando el agente te necesita",
+  "Agente construido a medida para tu negocio, no una plantilla",
+  "Panel de conversaciones con el historial completo",
   "Ajustes de textos, precios y horarios incluidos",
   "Número propio de WhatsApp para el negocio",
-  "Soporte por WhatsApp",
-];
-
-const defineMensualidad = [
-  "Cuántas conversaciones atiende al mes",
-  "Cuántos mensajes de recordatorio y seguimiento envía",
-  "Con cuántos de tus sistemas se conecta",
+  "Soporte por WhatsApp, directo conmigo",
+  "Mes a mes, sin contrato de permanencia",
 ];
 
 export default function Planes() {
@@ -50,24 +81,66 @@ export default function Planes() {
           </span>
         </h2>
 
-        <div className="mt-10 grid divide-y divide-border border-y border-border md:grid-cols-3 md:divide-x md:divide-y-0">
-          {comoSePaga.map((momento, i) => (
+        <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted">
+          El primer mes de operación no tiene mensualidad. Empieza a correr
+          desde el segundo, cuando ya viste al agente trabajando con tus
+          clientes de verdad.
+        </p>
+
+        <div className="mt-10 grid gap-4 lg:grid-cols-3">
+          {tramos.map((tramo) => (
             <div
-              key={momento.titulo}
-              className="py-6 md:px-6 md:py-7 md:first:pl-0 md:last:pr-0"
+              key={tramo.nombre}
+              className={`${card} flex flex-col p-6 sm:p-7 ${
+                tramo.destacado ? "bg-surface border-border-hi" : ""
+              }`}
             >
-              <span className="font-mono text-xs text-dim">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <p className="mt-3 font-mono text-lg tracking-[-0.02em] text-fg">
-                {momento.monto}
-              </p>
-              <p className="mt-2 text-sm font-medium tracking-[-0.01em] text-fg">
-                {momento.titulo}
+              <p className="text-base font-medium tracking-[-0.01em] text-fg">
+                {tramo.nombre}
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-muted">
-                {momento.detalle}
+                {tramo.para}
               </p>
+
+              <div className="mt-6 border-t border-border pt-6">
+                <p className="font-mono text-2xl tracking-[-0.02em] text-fg">
+                  {tramo.mensualidad}
+                  <span className="ml-1 font-sans text-sm text-muted">
+                    USD/mes
+                  </span>
+                </p>
+                <p className="mt-1.5 text-sm text-muted">
+                  {tramo.implementacion} de implementación, pago único
+                </p>
+              </div>
+
+              <div className="mt-5 border-t border-border pt-5">
+                <p className="text-sm text-fg">{tramo.conversaciones}</p>
+                <p className="mt-1 text-sm text-dim">{tramo.extra}</p>
+              </div>
+
+              <ul className="mt-5 flex-1 space-y-3 border-t border-border pt-5">
+                {tramo.incluye.map((item) => (
+                  <li
+                    key={item}
+                    className="flex gap-2.5 text-sm leading-relaxed text-muted"
+                  >
+                    <span aria-hidden="true" className="text-dim">
+                      —
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href={config.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${btnPrimary} mt-6 w-full`}
+              >
+                Conversemos tu caso
+              </a>
             </div>
           ))}
         </div>
@@ -75,7 +148,7 @@ export default function Planes() {
         <div className="mt-10 grid gap-4 lg:grid-cols-2">
           <div className={`${card} bg-surface p-6 sm:p-7`}>
             <p className="text-base font-medium tracking-[-0.01em] text-fg">
-              Siempre incluido
+              En los tres tramos
             </p>
             <ul className="mt-6 space-y-3 border-t border-border pt-6">
               {incluyeSiempre.map((item) => (
@@ -94,34 +167,30 @@ export default function Planes() {
 
           <div className={`${card} flex flex-col p-6 sm:p-7`}>
             <p className="text-base font-medium tracking-[-0.01em] text-fg">
-              Qué define la mensualidad
-            </p>
-            <ul className="mt-6 space-y-3 border-t border-border pt-6">
-              {defineMensualidad.map((item) => (
-                <li
-                  key={item}
-                  className="flex gap-2.5 text-sm leading-relaxed text-muted"
-                >
-                  <span aria-hidden="true" className="text-dim">
-                    —
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <p className="mt-6 text-sm leading-relaxed text-muted">
-              Lo vemos en la llamada con los números reales de tu negocio, y te
-              dejo el valor por escrito antes de que decidas.
+              El consumo va aparte
             </p>
 
             {/* Visible, no en letra chica: el consumo va sobre la mensualidad
-                y el comprador tiene que saberlo antes de la llamada. */}
-            <p className="mt-6 flex-1 border-t border-border pt-6 text-sm leading-relaxed text-muted">
+                y el comprador tiene que saberlo antes de la llamada. Es el
+                único monto que varía de mes a mes, y una sorpresa acá cuesta
+                el cliente. */}
+            <p className="mt-6 border-t border-border pt-6 text-sm leading-relaxed text-muted">
               Aparte de la mensualidad corre el{" "}
               <span className="text-fg">consumo del mes</span>: mensajes de
               Meta, transcripción de audios e integraciones. Va a costo, sin
               recargo mío, en la misma boleta.
+            </p>
+
+            <p className="mt-4 text-sm leading-relaxed text-muted">
+              En el tramo de seguimiento automático es el monto que más se
+              mueve, porque cada recordatorio que envía el agente es un mensaje
+              que cobra Meta. Te muestro la estimación antes de activarlo.
+            </p>
+
+            <p className="mt-6 flex-1 border-t border-border pt-6 text-sm leading-relaxed text-muted">
+              ¿No estás seguro de cuál te corresponde? Lo vemos en la llamada con
+              los números reales de tu negocio, y te dejo el valor por escrito
+              antes de que decidas.
             </p>
 
             <a
