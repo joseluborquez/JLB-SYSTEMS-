@@ -47,7 +47,7 @@ const tramos = [
       "Todo lo anterior",
       "Se conecta con hasta 3 de tus sistemas: CRM, ERP, agenda, pagos",
       "Consulta stock, precios o estado de pedidos en vivo",
-      "Recordatorios automáticos antes de cada cita",
+      "Recordatorios y avisos programados a clientes que ya tienes: citas, pedidos habituales, renovaciones",
     ],
     destacado: true,
   },
@@ -61,7 +61,7 @@ const tramos = [
     incluye: [
       "Todo lo anterior",
       "Integraciones a medida, sin límite de sistemas",
-      "Seguimiento a quien no respondió y recuperación de ventas caídas",
+      "Seguimiento a leads que no respondieron y recuperación de ventas caídas",
       "Prioridad de soporte y ajustes",
     ],
     destacado: false,
