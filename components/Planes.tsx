@@ -1,80 +1,86 @@
 import Eyebrow, { IconoEtiqueta } from "@/components/Eyebrow";
 import { config } from "@/lib/config";
 import { btnPrimary, card, container, heading, section } from "@/lib/ui";
+import CalculadoraIA from "@/components/CalculadoraIA";
+import CalculadoraMeta from "@/components/CalculadoraMeta";
 
-// Tres tramos, definidos por LO QUE HACE el agente y no por volumen.
+// Cuatro tramos, definidos por LO QUE HACE el agente, no por volumen.
+// Conversaciones ilimitadas en los tres — antes había tope + cobro extra
+// por conversación, pero eso protegía un costo de IA que absorbía yo. Ahora
+// el consumo de IA va a costo del cliente (ver CalculadoraIA), así que un
+// tope ya no protege ningún margen: solo sería una restricción artificial.
 //
-// La razón es de costos: una conversación cuesta centavos de IA, mientras que
-// las integraciones cuestan horas de desarrollo y los seguimientos cuestan
-// mensajes de plantilla de Meta. Escalonar por conversaciones sería cobrar por
-// lo más barato. Las conversaciones incluidas van como tope, no como driver.
-//
-// El precio de la conversación adicional es MÁS ALTO que el precio efectivo
-// por conversación del propio tramo, y eso es deliberado. Si fuera más barato,
-// a un cliente le convendría quedarse en el tramo chico y desbordar para
-// siempre: 800 conversaciones en el tramo 1 saldrían $300 contra los $390 del
-// tramo 2. Así, subir de tramo conviene justo cuando el cliente lo necesita.
-//
-// El extra BAJA al subir de tramo, premiando al que se compromete. La
-// competencia cobra $0,40 plano en todos sus planes.
+// Implementación pareja en $300 + IVA en los tres tramos con precio fijo,
+// divisible en las primeras 3 mensualidades con contrato mínimo de 3 meses
+// — la ventana de contrato coincide con lo que toma recuperar el costo real
+// de implementación vía margen mensual.
 //
 // Los valores salen del modelo en COSTOS.md del repo del CRM. Si cambias uno
 // acá, cambia también el prompt del agente: cita los precios de memoria.
 const tramos = [
   {
-    nombre: "Responde y agenda",
-    implementacion: "$450",
-    mensualidad: "$220",
-    para: "Negocios que pierden clientes por no contestar a tiempo.",
-    conversaciones: "400 conversaciones al mes",
-    extra: "$0,40 por conversación adicional",
+    nombre: "Básico",
+    implementacion: "$300",
+    mensualidad: "$120",
+    para: "Negocios que solo necesitan responder preguntas frecuentes, sin agendar ni integrar nada todavía.",
     incluye: [
+      "Número propio de WhatsApp conectado al negocio",
       "Responde dudas frecuentes con la información de tu negocio",
+      "Conversaciones ilimitadas al mes",
       "Entiende qué necesita cada persona y lo registra",
-      "Agenda en tu calendario y manda la invitación",
       "Te avisa cuando alguien necesita hablar contigo",
     ],
     destacado: false,
   },
   {
-    nombre: "Integrado",
-    implementacion: "$590",
-    mensualidad: "$390",
-    para: "Negocios con sistemas propios donde el agente tiene que operar.",
-    conversaciones: "1.200 conversaciones al mes",
-    extra: "$0,30 por conversación adicional",
+    nombre: "Responde y agenda",
+    implementacion: "$300",
+    mensualidad: "$220",
+    para: "Negocios que pierden clientes por no contestar a tiempo.",
     incluye: [
-      "Todo lo anterior",
-      "Se conecta con hasta 3 de tus sistemas: CRM, ERP, agenda, pagos",
-      "Consulta stock, precios o estado de pedidos en vivo",
-      "Recordatorios y avisos programados a clientes que ya tienes: citas, pedidos habituales, renovaciones",
-    ],
-    destacado: true,
-  },
-  {
-    nombre: "Ciclo completo",
-    implementacion: "$1.400",
-    mensualidad: "$890",
-    para: "Operaciones de alto volumen que además quieren recuperar ventas.",
-    conversaciones: "3.000 conversaciones al mes",
-    extra: "$0,25 por conversación adicional",
-    incluye: [
-      "Todo lo anterior",
-      "Integraciones a medida, sin límite de sistemas",
-      "Seguimiento a leads que no respondieron y recuperación de ventas caídas",
-      "Prioridad de soporte y ajustes",
+      "Número propio de WhatsApp conectado al negocio",
+      "Todo lo de Básico",
+      "Agenda en tu calendario y manda la invitación",
+      "Conversaciones ilimitadas al mes",
     ],
     destacado: false,
   },
+  {
+    nombre: "Integrado",
+    implementacion: "$300",
+    mensualidad: "$390",
+    para: "Negocios con sistemas propios donde el agente tiene que operar.",
+    incluye: [
+      "Número propio de WhatsApp conectado al negocio",
+      "Todo lo de Responde y agenda",
+      "Se conecta con tu CRM: consulta y actualiza datos del cliente y del pipeline",
+      "Recordatorios y avisos programados a clientes que ya tienes",
+    ],
+    destacado: true,
+  },
 ];
+
+// Ciclo completo no tiene precio fijo (es a cotización), así que no calza
+// con el layout de tarjeta angosta de los tres de arriba — se muestra aparte,
+// como una tarjeta ancha, en vez de forzarla al mismo grid.
+const cicloCompleto = {
+  nombre: "Ciclo completo",
+  para: "Operaciones que necesitan integraciones a medida más allá del CRM.",
+  incluye: [
+    "Todo lo de Integrado",
+    "Integraciones a medida, sin límite de sistemas (facturación, inventario, sistemas propios)",
+    "Seguimiento a leads que no respondieron y recuperación de ventas caídas",
+    "Prioridad de soporte y ajustes",
+  ],
+};
 
 const incluyeSiempre = [
   "Agente construido a medida para tu negocio, no una plantilla",
   "Panel de conversaciones con el historial completo",
   "Ajustes de textos, precios y horarios incluidos",
   "Número propio de WhatsApp para el negocio",
-  "Soporte por WhatsApp, directo conmigo",
-  "Mes a mes, sin contrato de permanencia",
+  "Soporte por WhatsApp, 24/7",
+  "Mes a mes, sin contrato de permanencia (salvo que dividas la implementación en cuotas, ver abajo)",
 ];
 
 export default function Planes() {
@@ -84,16 +90,15 @@ export default function Planes() {
         <Eyebrow icono={IconoEtiqueta}>Precios</Eyebrow>
 
         <h2 className={`${heading} mt-4 max-w-3xl`}>
-          Se paga en dos partes.{" "}
+          Se paga en dos partes:{" "}
           <span className="text-muted">
-            Una implementación única, y desde el segundo mes una mensualidad.
+            una implementación única y una mensualidad.
           </span>
         </h2>
 
         <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted">
-          El primer mes de operación no tiene mensualidad. Empieza a correr
-          desde el segundo, cuando ya viste al agente trabajando con tus
-          clientes de verdad.
+          La implementación se puede pagar de una vez, o dividida en las
+          primeras 3 mensualidades con un contrato mínimo de 3 meses.
         </p>
 
         <div className="mt-10 grid gap-4 lg:grid-cols-3">
@@ -115,17 +120,12 @@ export default function Planes() {
                 <p className="font-mono text-2xl tracking-[-0.02em] text-fg">
                   {tramo.mensualidad}
                   <span className="ml-1 font-sans text-sm text-muted">
-                    USD/mes
+                    USD/mes + IVA
                   </span>
                 </p>
                 <p className="mt-1.5 text-sm text-muted">
-                  {tramo.implementacion} de implementación, pago único
+                  {tramo.implementacion} USD + IVA de implementación
                 </p>
-              </div>
-
-              <div className="mt-5 border-t border-border pt-5">
-                <p className="text-sm text-fg">{tramo.conversaciones}</p>
-                <p className="mt-1 text-sm text-dim">{tramo.extra}</p>
               </div>
 
               <ul className="mt-5 flex-1 space-y-3 border-t border-border pt-5">
@@ -154,10 +154,49 @@ export default function Planes() {
           ))}
         </div>
 
+        {/* Ciclo completo: ancha y sola, no un cuarto casillero angosto —
+            es a cotización, no tiene precio que mostrar como los otros tres. */}
+        <div className={`${card} mt-4 flex flex-col gap-6 p-6 sm:p-7 lg:flex-row lg:items-center`}>
+          <div className="lg:w-1/3">
+            <p className="text-base font-medium tracking-[-0.01em] text-fg">
+              {cicloCompleto.nombre}
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted">
+              {cicloCompleto.para}
+            </p>
+            <p className="mt-4 font-mono text-xl tracking-[-0.02em] text-fg">
+              A cotización
+            </p>
+            <p className="mt-1 text-xs text-dim">Valor USD + IVA, según alcance</p>
+            <a
+              href={config.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${btnPrimary} mt-4 w-full lg:w-auto`}
+            >
+              Conversemos tu caso
+            </a>
+          </div>
+
+          <ul className="grid flex-1 gap-3 border-t border-border pt-6 sm:grid-cols-2 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
+            {cicloCompleto.incluye.map((item) => (
+              <li
+                key={item}
+                className="flex gap-2.5 text-sm leading-relaxed text-muted"
+              >
+                <span aria-hidden="true" className="text-dim">
+                  —
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <div className="mt-10 grid gap-4 lg:grid-cols-2">
           <div className={`${card} bg-surface p-6 sm:p-7`}>
             <p className="text-base font-medium tracking-[-0.01em] text-fg">
-              En los tres tramos
+              En los cuatro tramos
             </p>
             <ul className="mt-6 space-y-3 border-t border-border pt-6">
               {incluyeSiempre.map((item) => (
@@ -185,8 +224,8 @@ export default function Planes() {
                 el cliente. */}
             <p className="mt-6 border-t border-border pt-6 text-sm leading-relaxed text-muted">
               Aparte de la mensualidad corre el{" "}
-              <span className="text-fg">consumo del mes</span>: mensajes de
-              Meta, transcripción de audios e integraciones. Va a costo, sin
+              <span className="text-fg">consumo del mes</span>: el modelo de
+              IA que elijas, mensajes de Meta e integraciones. Va a costo, sin
               recargo mío, en la misma boleta.
             </p>
 
@@ -194,6 +233,12 @@ export default function Planes() {
               En el tramo de seguimiento automático es el monto que más se
               mueve, porque cada recordatorio que envía el agente es un mensaje
               que cobra Meta. Te muestro la estimación antes de activarlo.
+            </p>
+
+            <p className="mt-4 text-sm leading-relaxed text-muted">
+              La transcripción de audios (notas de voz) tiene uso razonable
+              incluido. Si tu negocio recibe muchas notas de voz, lo vemos en
+              la llamada para que no te tomes una sorpresa.
             </p>
 
             <p className="mt-6 flex-1 border-t border-border pt-6 text-sm leading-relaxed text-muted">
@@ -213,11 +258,15 @@ export default function Planes() {
           </div>
         </div>
 
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <CalculadoraIA />
+          <CalculadoraMeta />
+        </div>
+
         <div className="mt-8 grid gap-x-8 gap-y-3 border-t border-border pt-6 text-sm leading-relaxed text-dim sm:grid-cols-2">
           <p>
             Una conversación son 24 horas de chat con la misma persona, no un
-            mensaje. Cuatrocientas conversaciones son cerca de cuatrocientos
-            clientes distintos al mes.
+            mensaje.
           </p>
           <p>
             Una sola boleta mensual: tu mensualidad más el consumo del mes, a

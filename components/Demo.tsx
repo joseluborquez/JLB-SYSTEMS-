@@ -18,7 +18,7 @@ const conversacion: { de: "cliente" | "agente"; texto: string }[] = [
   {
     de: "agente",
     texto:
-      "Hola. Hay tres tramos según lo que necesites que haga el agente. El de entrada son $450 USD + IVA de implementación y $220 al mes, con el primer mes de operación incluido. ¿Cuántas consultas recibes al mes por WhatsApp, más o menos?",
+      "Hola. Hay cuatro tramos según lo que necesites que haga el agente. El de entrada son $300 USD + IVA de implementación (se puede dividir en 3 cuotas) y $120 al mes. ¿Cuántas consultas recibes al mes por WhatsApp, más o menos?",
   },
   { de: "cliente", texto: "unas 200" },
   {
