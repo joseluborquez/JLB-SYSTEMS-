@@ -167,6 +167,32 @@
   animation: jlb-pulse 1.2s ease-in-out infinite;
 }
 
+/* Marquee de testimonios: el scroll real se mueve por JS (useAutoScroll),
+   esto solo oculta la barra de scroll nativa. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Strip de logos de herramientas: tres copias idénticas del contenido,
+   se desplaza un tercio del ancho total y vuelve a empezar sin salto. */
+@keyframes scroll-infinite {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-33.333%);
+  }
+}
+
+.animate-scroll-infinite {
+  animation: scroll-infinite 30s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

@@ -16,15 +16,19 @@ export default function Footer() {
           <span className="text-base font-semibold tracking-[-0.02em] sm:text-lg">
             {config.marca}
           </span>
-          <span className="font-mono text-[10px] text-dim">SpA</span>
         </a>
 
-        <a
-          href={`mailto:${config.email}`}
-          className="text-sm text-muted transition-colors duration-150 hover:text-fg"
-        >
-          {config.email}
-        </a>
+        <div className="flex flex-col gap-1 sm:items-end">
+          <a
+            href={`mailto:${config.email}`}
+            className="text-sm text-muted transition-colors duration-150 hover:text-fg"
+          >
+            {config.email}
+          </a>
+          <p className="font-mono text-[10px] text-dim">
+            Operado por {config.empresa}
+          </p>
+        </div>
       </div>
     </footer>
   );

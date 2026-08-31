@@ -99,7 +99,7 @@ export default function Demo() {
                   aria-hidden="true"
                   className="size-1.5 shrink-0 rounded-full bg-muted"
                 />
-                <span className="truncate">Agente de {config.empresa}</span>
+                <span className="truncate">Agente de {config.marca}</span>
               </span>
               <span className="shrink-0 font-mono text-xs whitespace-nowrap text-dim">
                 23:47

@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        // Fotos de reseñas subidas por clientes (bucket testimonial-photos).
+        protocol: "https",
+        hostname: "ztoflhpcluasxwozrupm.supabase.co",
+        pathname: "/storage/v1/object/public/testimonial-photos/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
