@@ -190,7 +190,9 @@
 }
 
 .animate-scroll-infinite {
-  animation: scroll-infinite 30s linear infinite;
+  /* Con solo 4 logos, 30s se sentía eterno para ver el set completo,
+     sobre todo en mobile donde entran menos por pantalla. */
+  animation: scroll-infinite 12s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
