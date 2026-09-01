@@ -51,14 +51,18 @@ function TarjetaTestimonio({ testimonio }: { testimonio: Testimonio }) {
 
 export default function Testimonios({ testimonios }: { testimonios: Testimonio[] }) {
   // Se repiten hasta tener al menos 4, para que el marquee alcance a cubrir
-  // pantallas anchas con pocas reseñas.
+  // pantallas anchas con pocas reseñas. Con testimonios=[] el while nunca
+  // avanzaría (push de nada no crece el array), por eso el guard de abajo.
   const set = useMemo(() => {
+    if (testimonios.length === 0) return [];
     const copia = [...testimonios];
     while (copia.length < 4) copia.push(...testimonios);
     return copia;
   }, [testimonios]);
 
   const trackRef = useAutoScroll<HTMLDivElement>(24, [set]);
+
+  if (testimonios.length === 0) return null;
 
   return (
     <section className={`${section} overflow-hidden`}>

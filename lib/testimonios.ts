@@ -10,37 +10,14 @@ export interface Testimonio {
   photo_url: string | null;
 }
 
-/** Fotos ya alojadas en el sitio, para reseñas sembradas sin foto propia. */
-export const fotosLocales: Record<string, string> = {
-  "Juan Pablo Vargas": "/testimonios/juan-pablo-vargas.png",
-  "Juan Núñez": "/testimonios/juan-nunez.png",
-};
-
-/** Se muestran si la base todavía no tiene reseñas aprobadas. */
-const testimoniosDeReserva: Testimonio[] = [
-  {
-    id: "seed-juan-pablo-vargas",
-    created_at: "",
-    name: "Juan Pablo Vargas",
-    role: "Fundador de Uruz",
-    quote: "Gracias a José, ahora gestiono de forma más sencilla mi gimnasio.",
-    rating: 5,
-    photo_url: null,
-  },
-  {
-    id: "seed-juan-nunez",
-    created_at: "",
-    name: "Juan Núñez",
-    role: "Cofundador de HumanIA",
-    quote:
-      "Lancé mi idea en 4 semanas y pude validarla en el mercado, me explotó la cabeza.",
-    rating: 5,
-    photo_url: null,
-  },
-];
+/** Fotos ya alojadas en el sitio, para reseñas aprobadas sin foto propia. */
+export const fotosLocales: Record<string, string> = {};
 
 /** Server-side: se llama directo desde un Server Component, sin
- * react-query ni fetch en el cliente — mejora sobre la SPA original. */
+ * react-query ni fetch en el cliente — mejora sobre la SPA original.
+ * Sin respaldo hardcodeado: si no hay reseñas aprobadas todavía, devuelve
+ * un array vacío y la sección simplemente no se muestra — mejor eso que
+ * rellenar con nombres inventados. */
 export async function getTestimoniosAprobados(): Promise<Testimonio[]> {
   const { data, error } = await supabase
     .from("testimonials")
@@ -48,6 +25,9 @@ export async function getTestimoniosAprobados(): Promise<Testimonio[]> {
     .eq("approved", true)
     .order("created_at", { ascending: false });
 
-  if (error || !data?.length) return testimoniosDeReserva;
-  return data;
+  if (error) {
+    console.error("[getTestimoniosAprobados] fetch failed:", error);
+    return [];
+  }
+  return data ?? [];
 }
