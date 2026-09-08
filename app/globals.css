@@ -167,6 +167,23 @@
   animation: jlb-pulse 1.2s ease-in-out infinite;
 }
 
+/* Logos de stack (Herramientas.tsx): son SVG monocromo negro sin fill
+   configurable vía currentColor porque next/image los carga como <img>, no
+   inline — así que se invierten con filter según el tema en vez de eso. */
+.jlb-logo-stack {
+  filter: invert(1);
+}
+
+:root[data-theme="light"] .jlb-logo-stack {
+  filter: none;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .jlb-logo-stack {
+    filter: none;
+  }
+}
+
 /* Marquee de testimonios: el scroll real se mueve por JS (useAutoScroll),
    esto solo oculta la barra de scroll nativa. */
 .no-scrollbar {

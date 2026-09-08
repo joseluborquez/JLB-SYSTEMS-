@@ -23,7 +23,7 @@ export const proyectos: Proyecto[] = [
     descripcion:
       "Web app de cierre de caja para un centro de especialidades médicas: cada profesional de salud accede con su propio perfil y ve sus ganancias diarias de forma automática.",
     imagen: "/proyectos/almenis-hero.jpg",
-    tags: ["Claude Code", "Supabase", "Vercel"],
+    tags: ["React", "TypeScript", "Tailwind CSS", "PostgreSQL", "Vite"],
     desafio: {
       descripcion:
         "Almenis, centro de especialidades médicas, cerraba caja a mano en cuadernos — un proceso que no escalaba y dependía de cada profesional. Tampoco fue posible integrar directamente con la API de Reservo, el software de agenda que ya usaban, lo que obligó a buscar otra vía de entrada de datos.",
@@ -43,7 +43,7 @@ export const proyectos: Proyecto[] = [
     descripcion:
       "Web app que permite cotizar y comprar repuestos japoneses originales, con pago a través de distintas pasarelas, ingresando solo el número de parte OEM.",
     imagen: "/proyectos/raulspeed-hero.jpg",
-    tags: ["Claude Code", "Supabase", "Vercel"],
+    tags: ["Next.js", "React", "TypeScript", "PostgreSQL"],
     desafio: {
       descripcion:
         "RaulSpeed recibía y cotizaba solicitudes de repuestos por WhatsApp de forma manual. A eso se sumó un desafío técnico mayor: no existía una base de datos estructurada de repuestos ni acceso directo a los catálogos japoneses de origen.",
@@ -63,7 +63,7 @@ export const proyectos: Proyecto[] = [
     descripcion:
       "Web app que automatiza la generación de guías de despacho para una empresa de logística, conectada directamente con su ERP.",
     imagen: "/proyectos/dilogic-hero.jpg",
-    tags: ["Claude Code", "Supabase", "Vercel"],
+    tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "PostgreSQL"],
     desafio: {
       descripcion:
         "Dilogic, empresa de logística, generaba cientos de guías de despacho de forma manual en su ERP — una tarea que tomaba días en completarse.",
@@ -83,7 +83,7 @@ export const proyectos: Proyecto[] = [
     descripcion:
       "Agente de IA que responde en WhatsApp y conecta a los clientes con el profesional correspondiente según su necesidad — por ejemplo, gasfitería.",
     imagen: "/proyectos/teayudo-hero.jpg",
-    tags: ["Claude Code", "Supabase", "Kapso"],
+    tags: ["TypeScript", "Kapso"],
     desafio: {
       descripcion:
         "Te Ayudo respondía los mensajes de WhatsApp de forma manual — una labor que tomaba horas y hacía perder clientes por respuestas lentas.",
@@ -103,7 +103,7 @@ export const proyectos: Proyecto[] = [
     descripcion:
       "Sistema automatizado de ventas que responde a los leads en minutos, 24/7, y hace seguimiento hasta cerrar la venta.",
     imagen: "/proyectos/leadtocustomer-login.png",
-    tags: ["Claude Code", "Supabase", "Vercel", "Kapso"],
+    tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "PostgreSQL", "Kapso"],
     desafio: {
       descripcion:
         "Muchos negocios pierden tiempo respondiendo consultas manualmente — varias son solo curiosos — y las respuestas lentas hacen que los leads reales se vayan con la competencia.",
@@ -123,7 +123,7 @@ export const proyectos: Proyecto[] = [
     descripcion:
       "HumanIA es una app de entrenamiento potenciada con Inteligencia artificial para personalizar rutinas de entrenamiento según nivel de experiencia, contexto y equipamiento.",
     imagen: "/proyectos/humania-mockup.png",
-    tags: ["Gemini", "Lovable", "Supabase", "Make"],
+    tags: ["React", "TypeScript", "Tailwind CSS", "PostgreSQL", "Vite", "Gemini", "Make"],
     desafio: {
       descripcion:
         "Los usuarios necesitaban una forma personalizada de entrenar que se adaptara a sus necesidades individuales, objetivos y nivel de experiencia. El desafío era crear una experiencia de entrenamiento verdaderamente personalizada utilizando inteligencia artificial.",
@@ -143,7 +143,7 @@ export const proyectos: Proyecto[] = [
     descripcion:
       "Software de gestión de clientes para un gimnasio de entrenamiento personalizado.",
     imagen: "/proyectos/uruz-main.png",
-    tags: ["Lovable", "Supabase"],
+    tags: ["React", "TypeScript", "Tailwind CSS", "PostgreSQL", "Vite"],
     desafio: {
       descripcion:
         "El gimnasio necesitaba una solución completa para gestionar clientes, sesiones de entrenamiento, pagos y seguimiento de progreso. El sistema anterior era manual y consumía demasiado tiempo del equipo de entrenadores.",
@@ -195,4 +195,24 @@ export const logosHerramientas: Record<string, string> = {
   Airtable: "/logos/herramientas/airtable-logo.png",
   Gemini: "/logos/herramientas/gemini-logo.png",
   "Google Maps": "/logos/herramientas/googlemaps-logo.png",
+  "Next.js": "/logos/stack/nextjs-logo.svg",
+  React: "/logos/stack/react-logo.svg",
+  TypeScript: "/logos/stack/typescript-logo.svg",
+  "Tailwind CSS": "/logos/stack/tailwind-logo.svg",
+  PostgreSQL: "/logos/stack/postgresql-logo.svg",
+  Vite: "/logos/stack/vite-logo.svg",
 };
+
+/** Tags cuyo logo es un SVG monocromo negro (sin currentColor aplicable
+ * porque next/image lo carga como <img>) — necesitan el filtro de inversión
+ * .jlb-logo-stack para verse en tema oscuro. Ver Herramientas.tsx. */
+export const tagsMonocromo = new Set([
+  "Claude Code",
+  "Vercel",
+  "Next.js",
+  "React",
+  "TypeScript",
+  "Tailwind CSS",
+  "PostgreSQL",
+  "Vite",
+]);
