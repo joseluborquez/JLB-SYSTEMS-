@@ -19,7 +19,7 @@ export default function Herramientas() {
       <div className={container}>
         <h2 className={`${heading} max-w-2xl`}>
           El stack detrás del software.{" "}
-          <span className="text-muted">Lenguajes y frameworks, no plantillas de arrastrar y soltar.</span>
+          <span className="text-muted">Lenguajes y frameworks.</span>
         </h2>
       </div>
 
