@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import Image from "next/image";
 import StarRating from "@/components/StarRating";
 import { useAutoScroll } from "@/lib/useAutoScroll";
+import { videoOptimizado, videoThumbnail } from "@/lib/cloudinary";
 import { fotosLocales, type Testimonio } from "@/lib/testimonios";
 import { card, container, heading, section } from "@/lib/ui";
 
@@ -24,6 +25,15 @@ function TarjetaTestimonio({ testimonio }: { testimonio: Testimonio }) {
     >
       {testimonio.rating ? (
         <StarRating value={testimonio.rating} className="mb-4" />
+      ) : null}
+      {testimonio.video_url ? (
+        <video
+          src={videoOptimizado(testimonio.video_url)}
+          poster={videoThumbnail(testimonio.video_url)}
+          controls
+          preload="none"
+          className="mb-4 aspect-video w-full rounded-lg border border-border object-cover"
+        />
       ) : null}
       <blockquote className="flex-1 text-base leading-relaxed text-fg">
         &ldquo;{testimonio.quote}&rdquo;

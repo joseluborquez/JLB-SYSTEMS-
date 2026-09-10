@@ -8,6 +8,7 @@ export interface Testimonio {
   quote: string;
   rating: number | null;
   photo_url: string | null;
+  video_url: string | null;
 }
 
 /** Fotos ya alojadas en el sitio, para reseñas aprobadas sin foto propia. */
@@ -21,7 +22,7 @@ export const fotosLocales: Record<string, string> = {};
 export async function getTestimoniosAprobados(): Promise<Testimonio[]> {
   const { data, error } = await supabase
     .from("testimonials")
-    .select("id, created_at, name, role, quote, rating, photo_url")
+    .select("id, created_at, name, role, quote, rating, photo_url, video_url")
     .eq("approved", true)
     .order("created_at", { ascending: false });
 

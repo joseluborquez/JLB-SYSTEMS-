@@ -11,6 +11,40 @@ const BUCKET = "testimonial-photos";
 const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
 const TIPOS_PERMITIDOS = ["image/jpeg", "image/png", "image/webp"];
 
+// Video: sube directo del navegador a Cloudinary (unsigned upload preset),
+// mismo patrón que la foto sube directo a Supabase Storage — sin ruta de
+// API propia. Cloudinary transcodifica y genera thumbnail al vuelo vía
+// parámetros de URL (ver lib/cloudinary.ts), no hace falta guardar nada
+// aparte del secure_url original.
+const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
+const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
+const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
+const MAX_VIDEO_SECONDS = 90;
+const TIPOS_VIDEO_PERMITIDOS = ["video/mp4", "video/quicktime", "video/webm"];
+
+function subirVideoACloudinary(archivo: File, onProgress: (pct: number) => void): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const formData = new FormData();
+    formData.append("file", archivo);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`);
+    xhr.upload.onprogress = (ev) => {
+      if (ev.lengthComputable) onProgress(Math.round((ev.loaded / ev.total) * 100));
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve((JSON.parse(xhr.responseText).secure_url as string));
+      } else {
+        reject(new Error(`Cloudinary respondió ${xhr.status}`));
+      }
+    };
+    xhr.onerror = () => reject(new Error("Error de red subiendo el video."));
+    xhr.send(formData);
+  });
+}
+
 interface Valores {
   name: string;
   role: string;
@@ -70,10 +104,14 @@ export default function ResenaForm() {
   const [errores, setErrores] = useState<Partial<Record<keyof Valores, string>>>({});
   const [foto, setFoto] = useState<File | null>(null);
   const [previewFoto, setPreviewFoto] = useState<string | null>(null);
+  const [video, setVideo] = useState<File | null>(null);
+  const [previewVideo, setPreviewVideo] = useState<string | null>(null);
+  const [progresoVideo, setProgresoVideo] = useState(0);
   const [enviando, setEnviando] = useState(false);
   const [errorEnvio, setErrorEnvio] = useState<string | null>(null);
   const [enviado, setEnviado] = useState(false);
   const inputFotoRef = useRef<HTMLInputElement>(null);
+  const inputVideoRef = useRef<HTMLInputElement>(null);
 
   const onFoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const archivo = e.target.files?.[0];
@@ -94,6 +132,76 @@ export default function ResenaForm() {
       if (anterior) URL.revokeObjectURL(anterior);
       return URL.createObjectURL(archivo);
     });
+  };
+
+  const onVideo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const archivo = e.target.files?.[0];
+    if (!archivo) return;
+
+    if (!TIPOS_VIDEO_PERMITIDOS.includes(archivo.type)) {
+      setErrorEnvio("El video debe ser MP4, MOV o WebM.");
+      return;
+    }
+    if (archivo.size > MAX_VIDEO_BYTES) {
+      setErrorEnvio("El video no puede pesar más de 100 MB.");
+      return;
+    }
+
+    // La duración solo se sabe leyendo metadata del archivo, no del File
+    // directo — se prueba en un <video> oculto. Tiene que estar montado en
+    // el DOM: varios navegadores nunca disparan loadedmetadata en un
+    // elemento desconectado, y la prueba se queda colgada para siempre.
+    //
+    // Aun así, si loadedmetadata nunca llega (codec raro, navegador viejo,
+    // lo que sea), después de MAX_ESPERA_SONDA_MS se acepta el video sin
+    // el chequeo de duración — es una validación de cortesía, no debe poder
+    // trabar el envío de una reseña real.
+    const MAX_ESPERA_SONDA_MS = 6000;
+    const url = URL.createObjectURL(archivo);
+    const sonda = document.createElement("video");
+    sonda.preload = "metadata";
+    sonda.muted = true;
+    sonda.style.cssText = "position:absolute;width:0;height:0;opacity:0;pointer-events:none;";
+
+    let resuelto = false;
+    const limpiar = () => {
+      clearTimeout(timeoutId);
+      sonda.remove();
+    };
+    const aceptar = () => {
+      if (resuelto) return;
+      resuelto = true;
+      setErrorEnvio(null);
+      setVideo(archivo);
+      setPreviewVideo((anterior) => {
+        if (anterior) URL.revokeObjectURL(anterior);
+        return url;
+      });
+      limpiar();
+    };
+
+    const timeoutId = setTimeout(aceptar, MAX_ESPERA_SONDA_MS);
+
+    sonda.onloadedmetadata = () => {
+      if (resuelto) return;
+      if (sonda.duration > MAX_VIDEO_SECONDS) {
+        resuelto = true;
+        setErrorEnvio(`Tu video dura ${Math.round(sonda.duration)}s — el máximo son ${MAX_VIDEO_SECONDS}s.`);
+        URL.revokeObjectURL(url);
+        limpiar();
+        return;
+      }
+      aceptar();
+    };
+    sonda.onerror = () => {
+      if (resuelto) return;
+      resuelto = true;
+      setErrorEnvio("No pudimos leer ese video. Prueba con otro archivo.");
+      URL.revokeObjectURL(url);
+      limpiar();
+    };
+    document.body.appendChild(sonda);
+    sonda.src = url;
   };
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -119,6 +227,12 @@ export default function ResenaForm() {
         photoUrl = supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
       }
 
+      let videoUrl: string | null = null;
+      if (video) {
+        setProgresoVideo(1);
+        videoUrl = await subirVideoACloudinary(video, setProgresoVideo);
+      }
+
       const { error } = await supabase.from("testimonials").insert({
         name: valores.name.trim(),
         role: valores.role.trim() || null,
@@ -126,6 +240,7 @@ export default function ResenaForm() {
         rating: valores.rating,
         quote: valores.quote.trim(),
         photo_url: photoUrl,
+        video_url: videoUrl,
         approved: false,
       });
       if (error) throw error;
@@ -136,6 +251,7 @@ export default function ResenaForm() {
       setErrorEnvio("No pudimos enviar tu reseña. Inténtalo de nuevo en un momento.");
     } finally {
       setEnviando(false);
+      setProgresoVideo(0);
     }
   };
 
@@ -229,6 +345,43 @@ export default function ResenaForm() {
                 accept={TIPOS_PERMITIDOS.join(",")}
                 className="sr-only"
                 onChange={onFoto}
+              />
+            </div>
+          </Campo>
+
+          <Campo
+            label="Video de tu reseña"
+            hint={
+              progresoVideo > 0 && progresoVideo < 100
+                ? `Subiendo... ${progresoVideo}%`
+                : "Opcional · MP4, MOV o WebM · máx. 100 MB · hasta 90 segundos"
+            }
+          >
+            <div className="flex items-center gap-4">
+              {previewVideo ? (
+                <video
+                  src={previewVideo}
+                  muted
+                  className="h-14 w-20 shrink-0 rounded-md border border-border-hi object-cover"
+                />
+              ) : (
+                <div className="flex h-14 w-20 shrink-0 items-center justify-center rounded-md border border-border-hi text-xs text-muted">
+                  Video
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => inputVideoRef.current?.click()}
+                className={btnSecondary}
+              >
+                {video ? "Cambiar video" : "Subir video"}
+              </button>
+              <input
+                ref={inputVideoRef}
+                type="file"
+                accept={TIPOS_VIDEO_PERMITIDOS.join(",")}
+                className="sr-only"
+                onChange={onVideo}
               />
             </div>
           </Campo>

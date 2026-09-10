@@ -25,6 +25,7 @@ export type Database = {
           quote: string
           rating: number | null
           role: string | null
+          video_url: string | null
         }
         Insert: {
           approved?: boolean
@@ -36,6 +37,7 @@ export type Database = {
           quote: string
           rating?: number | null
           role?: string | null
+          video_url?: string | null
         }
         Update: {
           approved?: boolean
@@ -47,6 +49,7 @@ export type Database = {
           quote?: string
           rating?: number | null
           role?: string | null
+          video_url?: string | null
         }
         Relationships: []
       }
