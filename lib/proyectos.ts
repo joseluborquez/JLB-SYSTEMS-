@@ -23,7 +23,7 @@ export const proyectos: Proyecto[] = [
     descripcion:
       "Sitio web con catálogo digital de más de 150 productos para una fábrica de merchandising corporativo: los clientes buscan rápido lo que necesitan y cotizan directo por WhatsApp.",
     imagen: "/proyectos/sublinovena-hero.png",
-    tags: ["React", "TypeScript", "Tailwind CSS", "Vite", "Lovable", "Vercel"],
+    tags: ["React", "TypeScript", "Tailwind CSS", "Vite"],
     desafio: {
       descripcion:
         "Sublinovena, fábrica de merchandising corporativo en Temuco, mostraba su oferta en un extenso catálogo en PDF — difícil de recorrer para un cliente que solo necesita encontrar un producto concreto, y sin una vitrina propia en internet.",
