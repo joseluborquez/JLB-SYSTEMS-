@@ -18,6 +18,26 @@ export interface Proyecto {
 
 export const proyectos: Proyecto[] = [
   {
+    id: "sublinovena",
+    nombre: "Sublinovena",
+    descripcion:
+      "Sitio web con catálogo digital de más de 150 productos para una fábrica de merchandising corporativo: los clientes buscan rápido lo que necesitan y cotizan directo por WhatsApp.",
+    imagen: "/proyectos/sublinovena-hero.png",
+    tags: ["React", "TypeScript", "Tailwind CSS", "Vite", "Lovable", "Vercel"],
+    desafio: {
+      descripcion:
+        "Sublinovena, fábrica de merchandising corporativo en Temuco, mostraba su oferta en un extenso catálogo en PDF — difícil de recorrer para un cliente que solo necesita encontrar un producto concreto, y sin una vitrina propia en internet.",
+    },
+    solucion: {
+      descripcion:
+        "Construimos un sitio web que funciona como vitrina digital: un catálogo con más de 150 productos organizados por categoría (lanyards, botellas, mugs, mochilas y más), con búsqueda rápida, atención directa por WhatsApp y un blog para posicionarse en buscadores.",
+    },
+    resultados: {
+      descripcion:
+        "Hoy los clientes encuentran el producto que necesitan en segundos en lugar de revisar un PDF, y el sitio superó con creces los objetivos propuestos. Fernando Tabie, Director Ejecutivo de Sublinovena SpA, destaca el profesionalismo y la responsabilidad del servicio.",
+    },
+  },
+  {
     id: "almenis",
     nombre: "Almenis",
     descripcion:
