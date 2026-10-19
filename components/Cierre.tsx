@@ -23,7 +23,7 @@ const pasos = [
 
 export default function Cierre() {
   return (
-    <section className="relative overflow-hidden border-t border-border py-20 sm:py-28">
+    <section className="relative overflow-hidden border-t border-border py-20 sm:py-24">
       <Reticula />
 
       <div className={`${container} relative`}>
@@ -64,7 +64,7 @@ export default function Cierre() {
             rel="noopener noreferrer"
             className={btnPrimary}
           >
-            Agenda una llamada <span aria-hidden="true">→</span>
+            Agenda una llamada
           </a>
           <a
             href={config.whatsapp}

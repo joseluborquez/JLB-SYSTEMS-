@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import EfectoCtas from "@/components/EfectoCtas";
+import EfectoTarjetas from "@/components/EfectoTarjetas";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
@@ -14,12 +16,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const titulo = "JLB Systems — Software a medida y agentes de WhatsApp con IA";
+const titulo = "JLB Systems — Auditoría de flujos con IA para tu negocio";
 const descripcion =
-  "Software a medida, automatizaciones y agentes de IA para WhatsApp, construidos para negocios de LATAM. Portafolio real y precios fijos para el agente de WhatsApp.";
+  "Convierte tus procesos manuales en sistemas con IA que tu equipo domina. Conectamos las herramientas que ya usas, automatizamos lo repetitivo y capacitamos a tu equipo.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nocodejose.com"),
+  metadataBase: new URL("https://www.jlbsystems.cl"),
   title: {
     default: titulo,
     template: "%s — JLB Systems",
@@ -28,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: titulo,
     description: descripcion,
-    url: "https://nocodejose.com",
+    url: "https://www.jlbsystems.cl",
     siteName: "JLB Systems",
     locale: "es_CL",
     type: "website",
@@ -74,6 +76,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: scriptTema }} />
       </head>
       <body className="flex min-h-full flex-col bg-bg text-fg">
+        <EfectoTarjetas />
+        <EfectoCtas />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

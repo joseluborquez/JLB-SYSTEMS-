@@ -1,5 +1,5 @@
 import Eyebrow, { IconoCapas } from "@/components/Eyebrow";
-import { card, container, heading, section } from "@/lib/ui";
+import { cardFlujo, container, heading, section } from "@/lib/ui";
 
 const puntos = [
   {
@@ -51,7 +51,7 @@ export default function Diferenciador() {
           {puntos.map((punto) => (
             <div
               key={punto.titulo}
-              className={`${card} bg-surface p-6 transition-colors duration-150 hover:border-border-hi`}
+              className={`${cardFlujo} bg-surface p-6 transition-colors duration-150 hover:border-border-hi`}
             >
               <h3 className="text-base font-medium leading-snug tracking-[-0.01em] text-fg">
                 {punto.titulo}
@@ -65,7 +65,7 @@ export default function Diferenciador() {
 
         {/* La evidencia va aparte de las afirmaciones: mismo borde, sin fondo,
             para que no se lea como una cuarta tarjeta de features. */}
-        <div className={`${card} mt-4 p-6 sm:p-7`}>
+        <div className={`${cardFlujo} mt-4 p-6 sm:p-7`}>
           <p className="font-mono text-xs tracking-[0.02em] text-dim">
             Un caso real
           </p>

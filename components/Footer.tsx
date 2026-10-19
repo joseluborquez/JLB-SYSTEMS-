@@ -20,6 +20,14 @@ export default function Footer() {
 
         <div className="flex flex-col gap-1 sm:items-end">
           <a
+            href={config.whatsappAuditoria}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-muted transition-colors duration-150 hover:text-fg"
+          >
+            WhatsApp
+          </a>
+          <a
             href={`mailto:${config.email}`}
             className="text-sm text-muted transition-colors duration-150 hover:text-fg"
           >

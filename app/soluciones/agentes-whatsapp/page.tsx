@@ -9,6 +9,7 @@ import Problema from "@/components/Problema";
 
 export const metadata: Metadata = {
   title: "Agentes de WhatsApp con IA",
+  alternates: { canonical: "/soluciones/agentes-whatsapp" },
   description:
     "Agentes de IA para WhatsApp construidos a medida para negocios de servicios en LATAM. Responden en segundos, resuelven dudas, califican y agendan.",
 };
