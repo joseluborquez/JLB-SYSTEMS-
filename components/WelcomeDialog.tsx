@@ -57,10 +57,10 @@ export default function WelcomeDialog() {
             />
           </div>
           <h2 className="mt-5 text-lg font-medium tracking-[-0.01em] text-fg">
-            ¿Necesitas resolver un problema operativo?
+            ¿Qué proceso de tu negocio sigue siendo manual?
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Construyo software a medida, automatizaciones y agentes de IA.
+            Conversemos 30 minutos: vemos qué automatizar con IA y cómo tu equipo puede dominarlo.
           </p>
           <a
             href={config.calendario}
@@ -69,7 +69,7 @@ export default function WelcomeDialog() {
             className={`${btnPrimary} mt-6 w-full`}
             onClick={() => setAbierto(false)}
           >
-            Agenda una llamada gratuita
+            Agendar conversación
           </a>
         </div>
       </div>

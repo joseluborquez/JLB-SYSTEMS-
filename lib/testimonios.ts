@@ -14,6 +14,25 @@ export interface Testimonio {
 /** Fotos ya alojadas en el sitio, para reseñas aprobadas sin foto propia. */
 export const fotosLocales: Record<string, string> = {};
 
+/** Frase corta con el resultado, que se muestra arriba de la cita completa.
+ * Va por nombre porque la tabla de reseñas no tiene ese campo; sale solo de
+ * lo que dice cada reseña. Sin entrada, la tarjeta muestra solo la cita. */
+export const destacados: Record<string, string> = {
+  "Fernando Tabie": "Del catálogo en PDF a una vitrina digital",
+  "Oscar Saldivia": "Hace el trabajo de una persona",
+  "Raul Martinez": "Cotizador con más de 90 mil productos",
+  Hugo: "De 35 horas a 4 por ciclo de despachos",
+};
+
+/** Proyecto (id en lib/proyectos.ts) al que corresponde cada reseña, para el
+ * botón "Ver proyecto". Sin entrada, la tarjeta no lleva botón. */
+export const proyectoDeResena: Record<string, string> = {
+  "Fernando Tabie": "sublinovena",
+  "Oscar Saldivia": "teayudo",
+  "Raul Martinez": "raulspeed",
+  Hugo: "dilogic",
+};
+
 /** Server-side: se llama directo desde un Server Component, sin
  * react-query ni fetch en el cliente — mejora sobre la SPA original.
  * Sin respaldo hardcodeado: si no hay reseñas aprobadas todavía, devuelve

@@ -2,9 +2,21 @@
 // arrays de la SPA (uno para la grilla, otro para el detalle) que podían
 // desincronizarse. Acá es un solo lugar.
 
+/** Módulo del catálogo al que pertenece el caso (ver lib/modulos.ts). */
+export type ModuloCaso = "agente-whatsapp" | "integraciones" | "plataforma";
+
 export interface Proyecto {
   id: string;
   nombre: string;
+  modulo: ModuloCaso;
+  // Campos del formato nuevo de casos. Son opcionales a propósito: se
+  // completan cuando se recojan los números reales de cada cliente, y la
+  // página del caso solo muestra el bloque si el dato existe.
+  /** Métricas del resultado, medidas contra el punto de partida. */
+  medido?: string[];
+  /** Qué puede hacer hoy el cliente por su cuenta. */
+  autonomia?: string;
+  testimonio?: { texto: string; autor: string };
   descripcion: string;
   imagen: string;
   tags: string[];
@@ -19,26 +31,37 @@ export interface Proyecto {
 export const proyectos: Proyecto[] = [
   {
     id: "sublinovena",
+    modulo: "plataforma",
     nombre: "Sublinovena",
+    // Textos tomados del caso publicado en jlbsystems.cl. Sin cifras: aún no
+    // se recogen las de este cliente.
+    autonomia:
+      "Su equipo aprendió a hacer cambios en el sitio por su cuenta, con Lovable.",
+    testimonio: {
+      texto:
+        "La problemática que se resolvió, fue dejar de usar un extenso catálogo de productos en PDF y pasar a una página web que sirve de vitrina digital y ayuda a los clientes a buscar de forma rápida el producto que necesitan.",
+      autor: "Fernando Tabie, Director Ejecutivo de Sublinovena SpA",
+    },
     descripcion:
-      "Sitio web con catálogo digital de más de 150 productos para una fábrica de merchandising corporativo: los clientes buscan rápido lo que necesitan y cotizan directo por WhatsApp.",
+      "Sitio web con catálogo digital de más de 150 productos para una fábrica de merchandising corporativo. Los clientes encuentran lo que necesitan y cotizan directamente por WhatsApp.",
     imagen: "/proyectos/sublinovena-hero.png",
     tags: ["React", "TypeScript", "Tailwind CSS", "Vite"],
     desafio: {
       descripcion:
-        "Sublinovena, fábrica de merchandising corporativo en Temuco, mostraba su oferta en un extenso catálogo en PDF — difícil de recorrer para un cliente que solo necesita encontrar un producto concreto, y sin una vitrina propia en internet.",
+        "La fábrica de merchandising corporativo mostraba su oferta en un extenso catálogo en PDF, difícil de recorrer, y no tenía una vitrina propia en internet.",
     },
     solucion: {
       descripcion:
-        "Construimos un sitio web que funciona como vitrina digital: un catálogo con más de 150 productos organizados por categoría (lanyards, botellas, mugs, mochilas y más), con búsqueda rápida, atención directa por WhatsApp y un blog para posicionarse en buscadores.",
+        "Una vitrina digital con los productos ordenados por categoría (lanyards, botellas, tazones, mochilas y más), búsqueda rápida, atención directa por WhatsApp y un blog para aparecer en buscadores.",
     },
     resultados: {
       descripcion:
-        "Hoy los clientes encuentran el producto que necesitan en segundos en lugar de revisar un PDF, y el sitio superó con creces los objetivos propuestos. Fernando Tabie, Director Ejecutivo de Sublinovena SpA, destaca el profesionalismo y la responsabilidad del servicio.",
+        "Los clientes encuentran los productos en segundos, en vez de recorrer un PDF, y cotizan por WhatsApp. El proyecto superó con creces los objetivos propuestos.",
     },
   },
   {
     id: "almenis",
+    modulo: "plataforma",
     nombre: "Almenis",
     descripcion:
       "Web app de cierre de caja para un centro de especialidades médicas: cada profesional de salud accede con su propio perfil y ve sus ganancias diarias de forma automática.",
@@ -59,6 +82,7 @@ export const proyectos: Proyecto[] = [
   },
   {
     id: "raulspeed",
+    modulo: "plataforma",
     nombre: "RaulSpeed",
     descripcion:
       "Web app que permite cotizar y comprar repuestos japoneses originales, con pago a través de distintas pasarelas, ingresando solo el número de parte OEM.",
@@ -79,26 +103,40 @@ export const proyectos: Proyecto[] = [
   },
   {
     id: "dilogic",
+    modulo: "integraciones",
     nombre: "Dilogic",
+    // Cifras entregadas por Hugo (administrador) en el formulario de casos,
+    // 19-oct-2026. El ahorro mensual es cálculo propio: (35 − 4) h × 4 ciclos.
+    medido: [
+      "Cada ciclo de despachos: de 35 horas a 4 horas (89 % menos).",
+      "Con 4 ciclos al mes, unas 124 horas mensuales liberadas.",
+      "Completar todos los despachos: de 4–5 días a 1 día.",
+    ],
+    testimonio: {
+      texto:
+        "Tengo tiempo para darle atención a todos los demás procesos, todo más ordenado y estructurado.",
+      autor: "Hugo, administrador de Dilogic",
+    },
     descripcion:
-      "Web app que automatiza la generación de guías de despacho para una empresa de logística, conectada directamente con su ERP.",
+      "Aplicación web que genera de forma masiva las guías de despacho de una distribuidora de alimentos, conectada directamente con su ERP.",
     imagen: "/proyectos/dilogic-hero.jpg",
     tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "PostgreSQL"],
     desafio: {
       descripcion:
-        "Dilogic, empresa de logística, generaba cientos de guías de despacho de forma manual en su ERP — una tarea que tomaba días en completarse.",
+        "Dilogic, una distribuidora de alimentos de 10 personas, preparaba las guías de despacho a mano en su ERP. Cada ciclo tomaba unas 35 horas y traía errores de digitación, atrasos en la entrega de información y riesgo de incumplir la información tributaria del traslado de mercancías.",
     },
     solucion: {
       descripcion:
-        "Construimos una plataforma web donde se sube la solicitud de pedido y, mediante conexión directa vía API con su ERP, las guías de despacho se generan de forma automática.",
+        "Construimos una plataforma web donde se sube la solicitud de pedido y, mediante conexión directa vía API con su ERP, las guías de despacho se generan de forma automática y masiva.",
     },
     resultados: {
       descripcion:
-        "Una tarea que antes tomaba días ahora se resuelve en horas, sin intervención manual en el ERP.",
+        "Cada ciclo de despachos pasó de 35 a 4 horas: unas 124 horas menos al mes con 4 ciclos mensuales. Lo que tomaba de 4 a 5 días se cumple en uno.",
     },
   },
   {
     id: "teayudo",
+    modulo: "agente-whatsapp",
     nombre: "Te Ayudo",
     descripcion:
       "Agente de IA que responde en WhatsApp y conecta a los clientes con el profesional correspondiente según su necesidad — por ejemplo, gasfitería.",
@@ -119,6 +157,7 @@ export const proyectos: Proyecto[] = [
   },
   {
     id: "lead-to-customer",
+    modulo: "agente-whatsapp",
     nombre: "Lead to Customer",
     descripcion:
       "Sistema automatizado de ventas que responde a los leads en minutos, 24/7, y hace seguimiento hasta cerrar la venta.",
@@ -139,6 +178,7 @@ export const proyectos: Proyecto[] = [
   },
   {
     id: "humania",
+    modulo: "plataforma",
     nombre: "HumanIA",
     descripcion:
       "HumanIA es una app de entrenamiento potenciada con Inteligencia artificial para personalizar rutinas de entrenamiento según nivel de experiencia, contexto y equipamiento.",
@@ -159,6 +199,7 @@ export const proyectos: Proyecto[] = [
   },
   {
     id: "uruz",
+    modulo: "plataforma",
     nombre: "Uruz GYM",
     descripcion:
       "Software de gestión de clientes para un gimnasio de entrenamiento personalizado.",
@@ -179,6 +220,7 @@ export const proyectos: Proyecto[] = [
   },
   {
     id: "crm-reciclaje",
+    modulo: "integraciones",
     nombre: "CRM Servicio de reciclaje",
     descripcion:
       "Plataforma CRM diseñada para empresas que realizan recolección de residuos a domicilio, orientada a optimizar y digitalizar la gestión completa de sus flujos internos. El sistema centraliza la información de clientes, suscripciones, retiros y rutas, permitiendo una operación más eficiente, ordenada y escalable.",

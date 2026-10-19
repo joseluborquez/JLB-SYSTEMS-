@@ -1,10 +1,11 @@
+import CasosDestacados from "@/components/CasosDestacados";
+import CapacitacionEquipo from "@/components/CapacitacionEquipo";
 import CierreHome from "@/components/CierreHome";
-import Dolores from "@/components/Dolores";
-import Herramientas from "@/components/Herramientas";
-import HeroPersonal from "@/components/HeroPersonal";
-import Metodo from "@/components/Metodo";
-import PortafolioGrid from "@/components/PortafolioGrid";
-import Servicios from "@/components/Servicios";
+import HeroInicio from "@/components/HeroInicio";
+import PasosRecorrido from "@/components/PasosRecorrido";
+import PuertasEntrada from "@/components/PuertasEntrada";
+import QuienYPreguntas from "@/components/QuienYPreguntas";
+import SolucionesInicio from "@/components/SolucionesInicio";
 import Testimonios from "@/components/Testimonios";
 import WelcomeDialog from "@/components/WelcomeDialog";
 import { getTestimoniosAprobados } from "@/lib/testimonios";
@@ -15,18 +16,23 @@ import { getTestimoniosAprobados } from "@/lib/testimonios";
 // se aprueba a mano.
 export const revalidate = 3600;
 
+// Portada única: ocho secciones que resumen lo que antes eran páginas
+// separadas (auditoría, soluciones, método, precios). El detalle de cada
+// módulo se conversa en la llamada de 30 minutos. Se conservan aparte la
+// página del agente de WhatsApp y el detalle de los casos.
 export default async function Home() {
   const testimonios = await getTestimoniosAprobados();
 
   return (
     <>
-      <HeroPersonal />
-      <Dolores />
-      <Metodo />
-      <Servicios />
-      <PortafolioGrid />
+      <HeroInicio />
       <Testimonios testimonios={testimonios} />
-      <Herramientas />
+      <PuertasEntrada />
+      <PasosRecorrido />
+      <SolucionesInicio />
+      <CapacitacionEquipo />
+      <CasosDestacados />
+      <QuienYPreguntas />
       <CierreHome />
       <WelcomeDialog />
     </>

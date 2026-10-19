@@ -156,7 +156,9 @@ export default function Planes() {
 
         {/* Ciclo completo: ancha y sola, no un cuarto casillero angosto —
             es a cotización, no tiene precio que mostrar como los otros tres. */}
-        <div className={`${card} mt-4 flex flex-col gap-6 p-6 sm:p-7 lg:flex-row lg:items-center`}>
+        <div
+          className={`${card} mt-4 flex flex-col gap-6 p-6 sm:p-7 lg:flex-row lg:items-center`}
+        >
           <div className="lg:w-1/3">
             <p className="text-base font-medium tracking-[-0.01em] text-fg">
               {cicloCompleto.nombre}
@@ -167,7 +169,9 @@ export default function Planes() {
             <p className="mt-4 font-mono text-xl tracking-[-0.02em] text-fg">
               A cotización
             </p>
-            <p className="mt-1 text-xs text-dim">Valor USD + IVA, según alcance</p>
+            <p className="mt-1 text-xs text-dim">
+              Valor USD + IVA, según alcance
+            </p>
             <a
               href={config.whatsapp}
               target="_blank"
@@ -224,8 +228,8 @@ export default function Planes() {
                 el cliente. */}
             <p className="mt-6 border-t border-border pt-6 text-sm leading-relaxed text-muted">
               Aparte de la mensualidad corre el{" "}
-              <span className="text-fg">consumo del mes</span>: el modelo de
-              IA que elijas, mensajes de Meta e integraciones. Va a costo, sin
+              <span className="text-fg">consumo del mes</span>: el modelo de IA
+              que elijas, mensajes de Meta e integraciones. Va a costo, sin
               recargo mío, en la misma boleta.
             </p>
 
@@ -237,14 +241,14 @@ export default function Planes() {
 
             <p className="mt-4 text-sm leading-relaxed text-muted">
               La transcripción de audios (notas de voz) tiene uso razonable
-              incluido. Si tu negocio recibe muchas notas de voz, lo vemos en
-              la llamada para que no te tomes una sorpresa.
+              incluido. Si tu negocio recibe muchas notas de voz, lo vemos en la
+              llamada para que no te tomes una sorpresa.
             </p>
 
             <p className="mt-6 flex-1 border-t border-border pt-6 text-sm leading-relaxed text-muted">
-              ¿No estás seguro de cuál te corresponde? Lo vemos en la llamada con
-              los números reales de tu negocio, y te dejo el valor por escrito
-              antes de que decidas.
+              ¿No estás seguro de cuál te corresponde? Lo vemos en la llamada
+              con los números reales de tu negocio, y te dejo el valor por
+              escrito antes de que decidas.
             </p>
 
             <a
@@ -253,7 +257,7 @@ export default function Planes() {
               rel="noopener noreferrer"
               className="mt-6 text-sm font-medium text-fg underline decoration-border-hi underline-offset-4 transition-colors duration-150 hover:decoration-fg"
             >
-              ¿Dudas con el precio? Escríbeme →
+              ¿Dudas con el precio? Escríbeme
             </a>
           </div>
         </div>

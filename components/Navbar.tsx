@@ -6,11 +6,13 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { config } from "@/lib/config";
 import { container } from "@/lib/ui";
 
+// Portada única: los enlaces saltan a sus secciones. Casos tiene su propia
+// página (con el detalle de cada proyecto).
 const enlaces = [
-  { href: "/", texto: "Inicio" },
-  { href: "/#portafolio", texto: "Portafolio" },
-  { href: "/agentes-ia", texto: "Agentes IA" },
-  { href: "/agentes-ia#planes", texto: "Precios" },
+  { href: "/#como-funciona", texto: "Cómo funciona" },
+  { href: "/#soluciones", texto: "Soluciones" },
+  { href: "/casos", texto: "Casos" },
+  { href: "/#preguntas", texto: "Preguntas" },
 ];
 
 export default function Navbar() {
@@ -47,10 +49,10 @@ export default function Navbar() {
             href={config.calendario}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-accent px-3 py-1.5 text-sm font-medium whitespace-nowrap text-accent-fg transition-opacity duration-150 hover:opacity-90 sm:px-4"
+            className="cta-estrella cta-estrella-relleno rounded-full bg-accent px-3 py-1.5 text-sm font-medium whitespace-nowrap text-accent-fg transition-opacity duration-150 hover:opacity-90 sm:px-4"
           >
             <span className="sm:hidden">Agendar</span>
-            <span className="hidden sm:inline">Agenda una llamada</span>
+            <span className="hidden sm:inline">{config.ctaAgenda}</span>
           </a>
 
           <button

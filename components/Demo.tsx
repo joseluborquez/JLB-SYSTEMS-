@@ -82,7 +82,7 @@ export default function Demo() {
               rel="noopener noreferrer"
               className={`${btnPrimary} mt-8`}
             >
-              Escríbele por WhatsApp <span aria-hidden="true">→</span>
+              Escríbele por WhatsApp
             </a>
 
             <p className="mt-5 max-w-xs text-xs leading-relaxed text-dim">

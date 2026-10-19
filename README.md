@@ -1,6 +1,6 @@
 # JLB Systems — landing
 
-Landing page de JLB Systems SpA. El demo no está embebido: la sección Demo
+Sitio de JLB Systems SpA. El demo no está embebido: la sección Demo
 invita a escribirle por WhatsApp al agente real de JLB Systems, que es el mismo
 producto que se vende.
 
@@ -30,7 +30,7 @@ datos escritos a mano.
 | `calendario` | link de Google Calendar | navbar, cierre |
 | `marca` | `JLB Systems` | logotipo de navbar y footer |
 | `empresa` | `JLB Systems SpA` | cabecera del chat del Demo |
-| `email` | `contacto@nocodejose.com` | footer |
+| `email` | `nocodejose@gmail.com` | footer |
 
 **El número va sin `+`, espacios ni guiones.** `+1 208-248-5778` se escribe
 `12082485778`. Los dos links se arman solos a partir de él, con mensajes
@@ -86,21 +86,44 @@ tema: blanco sobre negro en oscuro, negro sobre blanco en claro.
 
 ## Estructura
 
+El sitio vende una **auditoría de flujos** con módulos a elección y traspaso de
+autonomía. Es una portada única de ocho secciones; cada sección responde una
+pregunta y todo termina en agendar una conversación de 30 minutos.
+
 ```
 app/
-  layout.tsx     fuentes Geist + metadata + script de tema
-  page.tsx       importa las 7 secciones en orden
-  globals.css    tokens de color, paletas por tema y reglas base
-components/      un componente por sección, más Eyebrow, Reticula y ThemeToggle
+  page.tsx                 portada: Hero, Dos puertas, Cómo funciona, Soluciones,
+                           Capacitación,
+                           Casos + testimonios, Quién + Preguntas, Cierre
+  soluciones/agentes-whatsapp/   demo, planes y calculadoras del agente
+  casos/ y casos/[id]/     casos con filtro por módulo
+  resena/                  formulario de reseñas (Supabase)
+components/                una pieza por sección; EfectoTarjetas y EfectoCtas
+                           aplican los efectos de tarjetas y botones
 lib/
-  config.ts      links, marca y contacto (ver tabla más arriba)
-  ui.ts          clases compartidas (botones, contenedor, titular, tarjeta)
-docs/
-  estructura-de-costos.md   documento interno de costos y topes por cliente
+  config.ts                links, marca, contacto y nombres del servicio
+  auditoria.ts             pasos y preguntas frecuentes
+  modulos.ts               catálogo de módulos (sin precios)
+  proyectos.ts             casos; `modulo` los clasifica
 ```
 
-`Reticula` es la decoración de fondo (líneas verticales + cruces) que usan el
-hero y el cierre. `Eyebrow` es la etiqueta pequeña sobre cada titular.
+Las páginas que antes eran `/auditoria`, `/soluciones`, `/metodo`, `/precios` y
+`/recursos` redirigen (307) a sus secciones de la portada, y `/agentes-ia` y
+`/proyecto/:id` a sus rutas nuevas (`next.config.ts`).
+
+## Pendientes de contenido
+
+- **El precio de la auditoría no se publica**; solo se define en la
+  conversación de alcance. Los módulos muestran rangos "desde".
+- Los nombres del servicio (`config.servicio`, `config.acompanamiento`) son
+  provisorios.
+- Los casos usan el texto antiguo. Para el formato nuevo, completar en
+  `lib/proyectos.ts` los campos opcionales `medido`, `autonomia` y
+  `testimonio`: la página del caso los muestra solo si existen.
+- Los precios del agente (`components/Planes.tsx`, `components/Demo.tsx` y el
+  prompt del agente) no se han alineado con la oferta nueva.
+- Se retiró la página de Recursos (taller, Skool, contenido de NoCode José):
+  no había links reales. Si se retoma, necesita las URLs.
 
 ## Build
 

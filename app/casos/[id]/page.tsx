@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import VolverCaso from "@/components/VolverCaso";
 import { notFound } from "next/navigation";
+import CierreAgenda from "@/components/CierreAgenda";
+import { nombreModulo } from "@/lib/modulos";
 import { getProyecto, logosHerramientas, proyectos, tagsMonocromo } from "@/lib/proyectos";
 import { container } from "@/lib/ui";
 
@@ -25,9 +27,13 @@ export async function generateMetadata({
 const secciones = (
   proyecto: NonNullable<ReturnType<typeof getProyecto>>,
 ) => [
-  { titulo: "El desafío", ...proyecto.desafio },
-  { titulo: "La solución", ...proyecto.solucion },
-  { titulo: "Los resultados", ...proyecto.resultados },
+  { titulo: "Situación inicial", ...proyecto.desafio },
+  { titulo: "Qué se implementó", ...proyecto.solucion },
+  {
+    // "medido" solo cuando hay números reales contra el punto de partida.
+    titulo: proyecto.medido ? "Resultado medido" : "Resultado",
+    ...proyecto.resultados,
+  },
 ];
 
 export default async function ProyectoPage({
@@ -42,14 +48,12 @@ export default async function ProyectoPage({
     <>
       <section className="border-b border-border pt-28 pb-16 sm:pt-32 sm:pb-20">
         <div className={container}>
-          <Link
-            href="/#portafolio"
-            className="inline-flex items-center gap-1.5 font-mono text-xs text-dim transition-colors duration-150 hover:text-fg"
-          >
-            <span aria-hidden="true">←</span> Volver al portafolio
-          </Link>
+          <VolverCaso />
 
-          <h1 className="mt-6 text-[clamp(1.8rem,5vw,3rem)] font-medium leading-[1.1] tracking-[-0.03em] text-fg">
+          <p className="mt-6 font-mono text-xs text-dim">
+            {nombreModulo[proyecto.modulo]}
+          </p>
+          <h1 className="mt-2 text-[clamp(1.8rem,5vw,3rem)] font-medium leading-[1.1] tracking-[-0.03em] text-fg">
             {proyecto.nombre}
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
@@ -72,7 +76,7 @@ export default async function ProyectoPage({
       <section className="border-b border-border py-14">
         <div className={container}>
           <p className="text-center font-mono text-xs tracking-[0.02em] text-dim">
-            Herramientas utilizadas
+            Stack utilizado
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-8">
             {proyecto.tags.map((tag) => (
@@ -140,6 +144,51 @@ export default async function ProyectoPage({
           </section>
         ),
       )}
+    
+      {proyecto.medido ? (
+        <section className="border-t border-border py-16 sm:py-20">
+          <div className={container}>
+            <h2 className="text-xl font-medium tracking-[-0.01em] text-fg sm:text-2xl">
+              Métricas
+            </h2>
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+              {proyecto.medido.map((m) => (
+                <li key={m} className="text-sm leading-relaxed text-muted">
+                  {m}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
+
+      {proyecto.autonomia ? (
+        <section className="border-t border-border py-16 sm:py-20">
+          <div className={container}>
+            <h2 className="text-xl font-medium tracking-[-0.01em] text-fg sm:text-2xl">
+              Autonomía
+            </h2>
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
+              {proyecto.autonomia}
+            </p>
+          </div>
+        </section>
+      ) : null}
+
+      {proyecto.testimonio ? (
+        <section className="border-t border-border py-16 sm:py-20">
+          <div className={container}>
+            <blockquote className="max-w-2xl text-lg leading-relaxed text-fg">
+              &ldquo;{proyecto.testimonio.texto}&rdquo;
+            </blockquote>
+            <p className="mt-4 text-sm text-muted">
+              {proyecto.testimonio.autor}
+            </p>
+          </div>
+        </section>
+      ) : null}
+
+      <CierreAgenda />
     </>
   );
 }

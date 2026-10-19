@@ -184,7 +184,7 @@
   }
 }
 
-/* Marquee de testimonios: el scroll real se mueve por JS (useAutoScroll),
+/* Marquee de testimonios: el scroll real se mueve por JS (components/CintaCasos.tsx),
    esto solo oculta la barra de scroll nativa. */
 .no-scrollbar {
   scrollbar-width: none;
@@ -212,6 +212,22 @@
   animation: scroll-infinite 12s linear infinite;
 }
 
+/* Cinta de casos: el avance automático lo hace components/CintaCasos.tsx. */
+.cinta-casos {
+  overflow-x: auto;
+  /* Espacio para que el pop de las tarjetas no quede recortado. */
+  padding-block: 0.5rem;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.cinta-casos-pista {
+  display: flex;
+  width: max-content;
+  gap: 1rem;
+  padding-right: 1rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -224,4 +240,132 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Tarjetas con efecto MagicBento (React Bits). components/EfectoTarjetas.tsx
+   calcula la posición del cursor y la deja en variables --mb-* de cada
+   tarjeta; aquí solo se dibujan los gradientes.
+   - ::before: luz suave que sigue al cursor dentro de la tarjeta (bajo el
+     contenido, sobre el fondo).
+   - ::after: anillo de 1px que se ilumina cerca del cursor, también en las
+     tarjetas vecinas, y el anillo de luz del clic. */
+:root {
+  --mb-glow-rgb: 244, 244, 245;
+  --mb-glow-alpha: 0.85;
+  --mb-spot-alpha: 0.07;
+  --mb-spot-size: 300px;
+  --mb-border-size: 225px;
+  /* Estado permanente: borde y luz como si el cursor estuviera cerca. */
+  --mb-base-ring: 0.4;
+  --mb-base-spot: 0.06;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --mb-glow-rgb: 24, 24, 27;
+    --mb-glow-alpha: 0.5;
+    --mb-spot-alpha: 0.035;
+    --mb-base-ring: 0.3;
+    --mb-base-spot: 0.035;
+  }
+}
+
+:root[data-theme="light"] {
+  --mb-glow-rgb: 24, 24, 27;
+  --mb-glow-alpha: 0.5;
+  --mb-spot-alpha: 0.035;
+  --mb-base-ring: 0.3;
+  --mb-base-spot: 0.035;
+}
+
+.tarjeta-flujo {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.15s,
+    background-color 0.15s;
+}
+
+/* Pop leve al pasar el cursor, para que no se sientan estáticas. */
+@media (hover: hover) {
+  .tarjeta-flujo:hover {
+    transform: translateY(-4px) scale(1.012);
+  }
+}
+
+.tarjeta-flujo::before,
+.tarjeta-flujo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.tarjeta-flujo::before {
+  z-index: -1;
+  background:
+    radial-gradient(
+      70% 60% at 50% 0%,
+      rgba(var(--mb-glow-rgb), var(--mb-base-spot)) 0%,
+      rgba(var(--mb-glow-rgb), 0) 100%
+    ),
+    radial-gradient(
+    var(--mb-spot-size) circle at var(--mb-x, -999px) var(--mb-y, -999px),
+    rgba(var(--mb-glow-rgb), calc(var(--mb-spot-alpha) * var(--mb-hot, 0) * 1)) 0%,
+    rgba(var(--mb-glow-rgb), calc(var(--mb-spot-alpha) * var(--mb-hot, 0) * 0.973)) 15%,
+    rgba(var(--mb-glow-rgb), calc(var(--mb-spot-alpha) * var(--mb-hot, 0) * 0.837)) 30%,
+    rgba(var(--mb-glow-rgb), calc(var(--mb-spot-alpha) * var(--mb-hot, 0) * 0.593)) 45%,
+    rgba(var(--mb-glow-rgb), calc(var(--mb-spot-alpha) * var(--mb-hot, 0) * 0.317)) 60%,
+    rgba(var(--mb-glow-rgb), calc(var(--mb-spot-alpha) * var(--mb-hot, 0) * 0.104)) 75%,
+    rgba(var(--mb-glow-rgb), calc(var(--mb-spot-alpha) * var(--mb-hot, 0) * 0.009)) 90%,
+    rgba(var(--mb-glow-rgb), 0) 100%
+  );
+}
+
+.tarjeta-flujo::after {
+  z-index: 1;
+  box-sizing: border-box;
+  padding: 1px;
+  background:
+    radial-gradient(
+      var(--mb-border-size) circle at var(--mb-x, -999px) var(--mb-y, -999px),
+      rgba(var(--mb-glow-rgb), calc(var(--mb-glow-alpha) * var(--mb-near, 0) * 1)) 0%,
+      rgba(var(--mb-glow-rgb), calc(var(--mb-glow-alpha) * var(--mb-near, 0) * 0.973)) 15%,
+      rgba(var(--mb-glow-rgb), calc(var(--mb-glow-alpha) * var(--mb-near, 0) * 0.837)) 30%,
+      rgba(var(--mb-glow-rgb), calc(var(--mb-glow-alpha) * var(--mb-near, 0) * 0.593)) 45%,
+      rgba(var(--mb-glow-rgb), calc(var(--mb-glow-alpha) * var(--mb-near, 0) * 0.317)) 60%,
+      rgba(var(--mb-glow-rgb), calc(var(--mb-glow-alpha) * var(--mb-near, 0) * 0.104)) 75%,
+      rgba(var(--mb-glow-rgb), calc(var(--mb-glow-alpha) * var(--mb-near, 0) * 0.009)) 90%,
+      rgba(var(--mb-glow-rgb), 0) 100%
+    ),
+    radial-gradient(
+      circle at var(--mb-wx, -999px) var(--mb-wy, -999px),
+      rgba(var(--mb-glow-rgb), 0) calc(var(--mb-wr, 0px) - 110px),
+      rgba(var(--mb-glow-rgb), calc(var(--mb-glow-alpha) * var(--mb-wa, 0) * 0.1)) calc(var(--mb-wr, 0px) - 80px),
+      rgba(var(--mb-glow-rgb), calc(var(--mb-glow-alpha) * var(--mb-wa, 0) * 0.32)) calc(var(--mb-wr, 0px) - 52px),
+      rgba(var(--mb-glow-rgb), calc(var(--mb-glow-alpha) * var(--mb-wa, 0) * 0.68)) calc(var(--mb-wr, 0px) - 28px),
+      rgba(var(--mb-glow-rgb), calc(var(--mb-glow-alpha) * var(--mb-wa, 0) * 0.94)) calc(var(--mb-wr, 0px) - 10px),
+      rgba(var(--mb-glow-rgb), calc(var(--mb-glow-alpha) * var(--mb-wa, 0))) calc(var(--mb-wr, 0px) - 3px),
+      rgba(var(--mb-glow-rgb), 0) var(--mb-wr, 0px)
+    ),
+    linear-gradient(rgba(var(--mb-glow-rgb), var(--mb-base-ring)) 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+/* Botones con efecto StarBorder (React Bits). components/EfectoCtas.tsx les
+   agrega un canvas con la estrella; aquí solo se prepara el contexto de
+   apilamiento: el canvas (z-index -1) queda sobre el fondo del botón y bajo
+   su texto, y sobresale 48px del borde para el brillo. */
+.cta-estrella {
+  position: relative;
+  isolation: isolate;
 }
