@@ -84,13 +84,27 @@ export const proyectos: Proyecto[] = [
     id: "raulspeed",
     modulo: "plataforma",
     nombre: "RaulSpeed",
+    // Cifras entregadas por Elvis Martínez (gerente de operaciones) en el
+    // formulario de casos, 20-oct-2026. Las horas son cálculo propio:
+    // 100 cotizaciones × 5–10 min = 500–1.000 min al mes. El aumento de
+    // ventas es dato declarado por el cliente, no medido por nosotros.
+    medido: [
+      "Cada cotización: de 5–10 minutos a segundos.",
+      "Con unas 100 cotizaciones al mes, entre 8 y 17 horas mensuales liberadas.",
+      "Aumento de ventas de 30 %, según el cliente.",
+    ],
+    testimonio: {
+      texto:
+        "Tenemos más tiempo para dedicar a otras mejoras de la empresa.",
+      autor: "Elvis Martínez, gerente de operaciones de RaulSpeed",
+    },
     descripcion:
       "Web app que permite cotizar y comprar repuestos japoneses originales, con pago a través de distintas pasarelas, ingresando solo el número de parte OEM.",
     imagen: "/proyectos/raulspeed-hero.jpg",
     tags: ["Next.js", "React", "TypeScript", "PostgreSQL"],
     desafio: {
       descripcion:
-        "RaulSpeed recibía y cotizaba solicitudes de repuestos por WhatsApp de forma manual. A eso se sumó un desafío técnico mayor: no existía una base de datos estructurada de repuestos ni acceso directo a los catálogos japoneses de origen.",
+        "RaulSpeed, un negocio de dos personas, cotizaba los repuestos originales a mano: cada cotización tomaba de 5 a 10 minutos, unas 100 veces al mes, con errores, demoras y clientes perdidos. A eso se sumó un desafío técnico mayor: no existía una base de datos estructurada de repuestos ni acceso directo a los catálogos japoneses de origen.",
     },
     solucion: {
       descripcion:
@@ -98,7 +112,7 @@ export const proyectos: Proyecto[] = [
     },
     resultados: {
       descripcion:
-        "Hoy los clientes cotizan y compran en un solo lugar, sin pasar por WhatsApp. Toda la información de pedidos y solicitudes llega directamente al perfil administrador de RaulSpeed.",
+        "Cada cotización pasó de 5–10 minutos a segundos, y el equipo usa ese tiempo en otras mejoras del negocio. Según el cliente, las ventas subieron 30 %. Hoy los clientes cotizan y compran en un solo lugar, sin pasar por WhatsApp. Toda la información de pedidos y solicitudes llega directamente al perfil administrador de RaulSpeed.",
     },
   },
   {
