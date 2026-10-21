@@ -20,7 +20,7 @@ export const fotosLocales: Record<string, string> = {};
 export const destacados: Record<string, string> = {
   "Fernando Tabie": "Del catálogo en PDF a una vitrina digital",
   "Oscar Saldivia": "Hace el trabajo de una persona",
-  "Raul Martinez": "Cotizador con más de 90 mil productos",
+  "Raul Martinez": "De 5–10 minutos a segundos por cotización",
   Hugo: "De 35 horas a 4 por ciclo de despachos",
 };
 
